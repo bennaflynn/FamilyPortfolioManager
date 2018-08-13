@@ -1,0 +1,11 @@
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\bin\Debug\netcoreapp2.0\FamilyPortfolioManager.deps.json
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\bin\Debug\netcoreapp2.0\FamilyPortfolioManager.runtimeconfig.json
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\bin\Debug\netcoreapp2.0\FamilyPortfolioManager.runtimeconfig.dev.json
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\bin\Debug\netcoreapp2.0\FamilyPortfolioManager.dll
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.csprojResolveAssemblyReference.cache
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.csproj.CoreCompileInputs.cache
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.AssemblyInfoInputs.cache
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.AssemblyInfo.cs
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\bin\Debug\netcoreapp2.0\FamilyPortfolioManager.pdb
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.dll
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.pdb

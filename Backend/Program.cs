@@ -14,7 +14,11 @@ namespace FamilyPortfolioManager
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+
+            
+
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
