@@ -9,3 +9,4 @@ C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\net
 C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\bin\Debug\netcoreapp2.0\FamilyPortfolioManager.pdb
 C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.dll
 C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\FamilyPortfolioManager.pdb
+C:\Users\benna\Desktop\SideProjects\FamilyPortfolioManager\Backend\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
