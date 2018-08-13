@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using FamilyPortfolioManager.Models;
 using FamilyPortfolioManager.Models.ViewModels;
 using FamilyPortfolioManager.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -61,7 +63,7 @@ namespace FamilyPortfolioManager.Controllers
             User theUser = context.Users.Where(u => u.username == user.username && u.password == password).FirstOrDefault();
             if(theUser != null)
             {
-                return Json(new JSONResponseVM { success = true, message = "Add the jwt token here" });
+                return Json(new JSONResponseVM { success = true, message = GenerateJWT.Generate(theUser.userId.ToString(), config) });
             } else
             {
                 return Json(new JSONResponseVM { success = false, message = "Incorrect login details" });
@@ -69,6 +71,7 @@ namespace FamilyPortfolioManager.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetUsers() => Json(context.Users.ToList());
     }
 }
