@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using FamilyPortfolioManager.Models;
@@ -19,10 +20,12 @@ namespace FamilyPortfolioManager.Controllers
     {
         AppDbContext context;
         IConfiguration config;
-        public UsersController(AppDbContext context, IConfiguration config)
+        IHttpContextAccessor httpContext;
+        public UsersController(AppDbContext context, IConfiguration config, IHttpContextAccessor httpContext)
         {
             this.context = context;
             this.config = config;
+            this.httpContext = httpContext;
         }
 
         [HttpPost]
@@ -68,6 +71,52 @@ namespace FamilyPortfolioManager.Controllers
             {
                 return Json(new JSONResponseVM { success = false, message = "Incorrect login details" });
             }
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult ChangeUsername([FromBody] UsernameVM username)
+        {
+            //get the user id
+            var userid = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Sub).Value;
+
+            //dpes this user exist?
+            if (userid != null)
+            {
+                User user = context.Users.Where(u => u.userId == Guid.Parse(userid)).FirstOrDefault();
+
+                user.username = username.username;
+
+                context.SaveChanges();
+                return Json(new JSONResponseVM { success = true, message = "New username: " + username.username });
+
+            }
+            return Json(new JSONResponseVM { success = false, message = "Something went wrong" });
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult ChangePassword([FromBody] PasswordVM password)
+        {
+            //get the user id from the JWT token
+            var userid = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Sub).Value;
+
+            if(userid != null)
+            {
+                User user = context.Users.Where(u => u.userId == Guid.Parse(userid)).FirstOrDefault();
+
+                //is the old password correct?
+                if(user.password != HashString.HashThat(password.oldPassword, config["salt"]))
+                {
+                    return Json(new JSONResponseVM { success = false, message = "Old password is incorrect" });
+                }
+                //change the password
+                user.password = HashString.HashThat(password.password, config["salt"]);
+                context.SaveChanges();
+
+                return Json(new JSONResponseVM { success = true, message = "New password created!" });
+            }
+            return Json(new JSONResponseVM { success = false, message = "This user doesn't exist" });
         }
 
         [HttpGet]

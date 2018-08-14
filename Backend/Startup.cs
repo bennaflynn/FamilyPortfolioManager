@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FamilyPortfolioManager.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,8 @@ namespace FamilyPortfolioManager
                     ClockSkew = TimeSpan.Zero // remove delay of token when expire
                 };
             });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddMvc();
         }
