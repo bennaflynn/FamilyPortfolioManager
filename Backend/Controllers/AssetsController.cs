@@ -58,5 +58,35 @@ namespace FamilyPortfolioManager.Controllers
 
             
         }
+
+        //this action result also doubles as a delete, as when deleting the quantity owned just gets 
+        //set to zero. And when displaying the stocks we only display the ones whose quantity owned
+        //is greater than 0
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult ChangeStockQuantityOwned([FromBody] QChangeStockVM stockChange)
+        {
+            if(!ModelState.IsValid)
+            {
+                return Json(new JSONResponseVM { success = false, message = "Model state is not valid" });
+            }
+
+            Stock stock = context.Stocks.Where(s => s.stockId == stockChange.id).FirstOrDefault();
+
+            if(stock != null)
+            {
+
+                stock.quantityOwned = stock.quantityOwned + stockChange.quantity < 0 ? 0 : stock.quantityOwned + stockChange.quantity;
+                context.SaveChanges();
+
+                return Json(new JSONResponseVM { success = true, message = "Quantity Changed" });
+            }
+            return Json(new JSONResponseVM { success = false, message = "Could not find this stock" });
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetAllStocks() => Json(context.Stocks.Where(s => s.quantityOwned > 0));
+        
     }
 }
