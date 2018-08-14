@@ -44,6 +44,18 @@ namespace FamilyPortfolioManager
                 };
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader()
+                                .AllowCredentials();
+                    });
+            });
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddMvc();
@@ -62,6 +74,8 @@ namespace FamilyPortfolioManager
             }
 
             app.UseStaticFiles();
+
+            app.UseCors("AllowAll");
 
             app.UseMvc(routes =>
             {
