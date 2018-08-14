@@ -46,6 +46,7 @@ namespace FamilyPortfolioManager.Models
         public Guid assetId { get; set; }
         public string type { get; set; }
         public string name { get; set; }
+        public string imageUrl { get; set; }
         public double quanityOwned { get; set; }
         public double purchasePrice { get; set; }
         public double currentValue { get; set; }
