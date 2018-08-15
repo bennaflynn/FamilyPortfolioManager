@@ -17,9 +17,8 @@ class Header extends Component {
     }
 
     //the user has clicked the item
-    handleClick(event) {
-        event.preventDefault();
-        console.log(event);
+    handleClick(item) {
+        console.log(item);
     }
 
     //render our nav items
@@ -42,7 +41,7 @@ class Header extends Component {
                             <NavItem                           
                             key={item[1]}
                             eventKey={item[1]}
-                            onClick={()=> console.log("Hello")}
+                            onClick={() => this.handleClick(item)}
                             >
                                 {item[0]}
                             </NavItem>
