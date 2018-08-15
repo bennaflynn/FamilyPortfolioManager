@@ -27,6 +27,14 @@ class Login extends Component {
 
     }
 
+    componentWillMount() {
+        var token = this.props.cookies.get('token');
+
+        if(token) {
+            this.props.history.push('/home');
+        }
+    }
+
     handleUsernameChange(event) {
         this.setState({username: event.target.value});
     }
@@ -57,9 +65,15 @@ class Login extends Component {
         .then(handleResponse)
         .then((result) => {
             if(result.success) {
-                alert("Logged in bebe");
+                //set the cookie
+                console.log(history);
+                cookies.set('token', result.message,{path:'/'});
+                history.push({
+                    pathname:'/home'
+                    
+                });
+                
             } else {
-                alert("Not logged babe");
                 this.setState({error: result.message});
             }
         })
