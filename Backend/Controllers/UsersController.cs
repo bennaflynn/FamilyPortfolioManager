@@ -121,6 +121,31 @@ namespace FamilyPortfolioManager.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetUser()
+        {
+            //get the userId
+            var userId = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Sub).Value;
+
+            //does this user exist?
+            if(userId != null)
+            {
+                User user = context.Users.Where(u => u.userId == Guid.Parse(userId)).FirstOrDefault();
+
+                if(user != null)
+                {
+                    return Json(user);
+                } else
+                {
+                    return Json(new JSONResponseVM { success = false, message = "This user doesn't exist" });
+                }
+            } else
+            {
+                return Json(new JSONResponseVM { success = false, message = "This user doesn't exist" });
+            }
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetUsers() => Json(context.Users.ToList());
     }
 }
