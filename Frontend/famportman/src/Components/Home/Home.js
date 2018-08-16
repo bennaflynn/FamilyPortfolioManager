@@ -6,6 +6,7 @@ import {withRouter} from 'react-router-dom';
 import {checkCookie} from '../../Helpers/checkCookie';
 import {handleResponse} from '../../Helpers/handleResponse';
 import {API_URL} from '../../Constants/api';
+import {Route, Switch} from 'react-router-dom';
 
 //Components
 import Header from './Header';
@@ -21,6 +22,9 @@ class Home extends Component {
             firstname: "",
             lastname: ""
         }
+
+        //bind our event handlers
+        this.handleNavigation = this.handleNavigation.bind(this);
     }
 
     //all the stuff that happens before the component loads
@@ -60,16 +64,28 @@ class Home extends Component {
         })
     }
 
+    handleNavigation(item) {
+        //get whatever item is selected
+        console.log("From parent");
+        console.log(item);
+        this.props.history.push(`/home/${item[0]}`)
+    }
+
     render() {
         return(   
             <div>
                 <Header 
                 first={this.state.firstname}
                 last={this.state.lastname}
+                handleNavigation={this.handleNavigation}
                 />     
                    
                 <h1>{this.state.username}</h1> 
                 <p>{this.state.firstname} {this.state.lastname}</p>
+                <Switch>
+                    <Route path={`${this.props.match.path}/stocks`} component={Stocks}  />
+                    <Route path={`${this.props.match.path}/assets`} component={Assets}  />
+                </Switch>
             </div>      
         );
     }

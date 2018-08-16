@@ -10,7 +10,7 @@ class Assets extends Component {
             <div>
                 <h1>Assets</h1>
                 <Link 
-                to="/stocks"
+                to="/home/stocks"
                 >
                 Stocks
                 </Link>

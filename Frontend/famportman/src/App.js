@@ -22,7 +22,7 @@ class App extends Component {
             <Route 
             path="/home"
             component={Home}
-            exact
+            
             />
             <Route
             component={Login}

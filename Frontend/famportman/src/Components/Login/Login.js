@@ -69,7 +69,7 @@ class Login extends Component {
                 console.log(history);
                 cookies.set('token', result.message,{path:'/'});
                 history.push({
-                    pathname:'/home'
+                    pathname:'/home/stocks'
                     
                 });
                 

@@ -11,7 +11,7 @@ class Stocks extends Component {
             <div>
                 <h1>Stocks</h1>
                 <Link
-                to="/assets"
+                to="/home/assets"
                 >
                 Assets
                 </Link>
