@@ -59,6 +59,8 @@ class Stocks extends Component {
                 //the stocks is now our array of data
                 this.setState({stocks: result, selectedStock: result[0]});
                 
+                
+
                 //now we have our result. 
                 //what we want to do now is call the Alpha Advantage API to get the price info foreach of these stocks
 
@@ -69,8 +71,11 @@ class Stocks extends Component {
                     })
                     .then(handleResponse)
                     .then((result) => {
+                       
+
                         //add the stock info for that stock to our state
-                        this.state.stockCharts.push(result);
+                        //add it this way, because it is an array of objects
+                        this.setState({stockCharts: [...this.state.stockCharts, result]})
                         
                     })
                     .catch((error) => {
@@ -79,7 +84,7 @@ class Stocks extends Component {
                 }, this);
 
                 this.setState({loading:false});
-                console.log(this.state.stockCharts);
+                //console.log(this.state.stockCharts);
                 
             } else {
                 console.log("Something went wrong");
@@ -99,35 +104,42 @@ class Stocks extends Component {
         //for iterating the eventkey
         var index = -1;
 
+        var newstocks = JSON.stringify(stockCharts[0]);
+
         if(loading) {
             return <h1>Loading...</h1>
         }
 
+        //basically, is the array filled up yet?
+        if(stockCharts.length == stocks.length) {
+            return(                
+                <div>
+                    
+                    <Nav className="sideBar" bsStyle="pills" stacked pullLeft onSelect={this.handleSelect}>
+                        {stocks.map(stock => {
+                            index++;
+                            return(
+                                <NavItem key={stock.stockId} eventKey={index}>
+                                    {stock.name}
+                                </NavItem>
+                            );
+                            
+                        })}
+                    </Nav>
+                    {console.log(this.state.stockCharts[0]["Meta Data"])}
+                    <Stock 
+                    name={this.state.selectedStock.name}
+                    symbol={this.state.selectedStock.symbol}
+                    priceData={this.state.stockCharts[1]}
+                    />
+                </div>
+            );
+        }
+
         return(
-
-           
-
-            <div>
-                
-                <Nav className="sideBar" bsStyle="pills" stacked pullLeft onSelect={this.handleSelect}>
-                    {stocks.map(stock => {
-                        index++;
-                        return(
-                            <NavItem key={stock.stockId} eventKey={index}>
-                                {stock.name}
-                            </NavItem>
-                        );
-                        
-                    })}
-                </Nav>
-                {console.log(this.state.stockCharts["Meta Data"])}
-                <Stock 
-                name={this.state.selectedStock.name}
-                symbol={this.state.selectedStock.symbol}
-                priceData={this.state.stockCharts[1]}
-                />
-            </div>
+            <h1>Nothing here yet</h1>
         );
+       
     }
 }
 
