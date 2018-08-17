@@ -16,7 +16,8 @@ class Stock extends Component {
             priceData: this.props.priceData,
             //get the date that we are looking for
             lastUpdated: this.props.priceData["Meta Data"]["3. Last Refreshed"].substring(0,10),
-            fiftyTwoWeeks: []
+            fiftyTwoWeeks: [],
+            dates: []
         }
 
         
@@ -50,6 +51,7 @@ class Stock extends Component {
     get52Weeks(priceData) {
         var {fiftyTwoWeeks} = this.state;
 
+        console.log(priceData);
         //our counter
         var max = 52;
 
@@ -58,19 +60,24 @@ class Stock extends Component {
 
         //our object
         var weeks = [];
+        var dates = [];
 
         for(let i = 0; i < max; i++) {
-            weeks.push(priceData["Weekly Time Series"][keys[i]]);
+            //push the close price for the year
+            weeks.push(priceData["Weekly Time Series"][keys[i]]["4. close"]);
+            //push the date associated with the close price for the year
+            dates.push(keys[i]);
         }
 
-        this.setState({fiftyTwoWeeks: weeks});
+        this.setState({fiftyTwoWeeks: weeks, dates: dates});
         
     }
 
     render() {
         
-        var {name, symbol, priceData, lastUpdated, quantity, fiftyTwoWeeks} = this.state;
+        var {name, symbol, priceData, lastUpdated, quantity, fiftyTwoWeeks, dates} = this.state;
 
+        console.log(dates);
 
         if(!priceData) {
             return(
