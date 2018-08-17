@@ -7,6 +7,7 @@ class Stock extends Component {
     constructor(props) {
         super(props);
         
+        //TO DO: Add check to see if the data is actually coming from the api
 
         this.state = {
             name: this.props.name,
@@ -14,8 +15,11 @@ class Stock extends Component {
             quantity: this.props.quantity,
             priceData: this.props.priceData,
             //get the date that we are looking for
-            lastUpdated: this.props.priceData["Meta Data"]["3. Last Refreshed"]
+            lastUpdated: this.props.priceData["Meta Data"]["3. Last Refreshed"].substring(0,10),
+            fiftyTwoWeeks: []
         }
+
+        
     }
 
     //this is fired before the component is rendered
@@ -23,21 +27,58 @@ class Stock extends Component {
     //if so, do stuff
     componentWillReceiveProps(props) {
 
-        console.log(props.priceData);
+        //console.log(props.priceData);
         this.setState({
             name: props.name,
             symbol: props.symbol,
             priceData: props.priceData,
-            lastUpdated: props.priceData["Meta Data"]["3. Last Refreshed"],
+            lastUpdated: props.priceData["Meta Data"]["3. Last Refreshed"].substring(0,10),
             quantity: props.quantity
         });
+
+        //get our year
+        this.get52Weeks(props.priceData);
        
+    }
+
+    componentWillMount() {
+        this.get52Weeks(this.state.priceData);
+    }
+
+    //essentially, loop through our pricedata and get the prices from the
+    //past year
+    get52Weeks(priceData) {
+        var {fiftyTwoWeeks} = this.state;
+
+        //our counter
+        var max = 52;
+
+        //get our keys
+        var keys = Object.keys(priceData["Weekly Time Series"]);
+
+        //our object
+        var weeks = [];
+
+        for(let i = 0; i < max; i++) {
+            weeks.push(priceData["Weekly Time Series"][keys[i]]);
+        }
+
+        this.setState({fiftyTwoWeeks: weeks});
         
     }
 
     render() {
         
-        var {name, symbol, priceData, lastUpdated, quantity} = this.state;
+        var {name, symbol, priceData, lastUpdated, quantity, fiftyTwoWeeks} = this.state;
+
+
+        if(!priceData) {
+            return(
+                <p>Fetching price data</p>
+            );
+        }
+
+        
 
         return(
             <div>
