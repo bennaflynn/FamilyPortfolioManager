@@ -23,20 +23,26 @@ class Stocks extends Component {
         this.state = {
             stocks: [],
             stockCharts: [],
+            stockIndex: 0,
             selectedStock: null,
             error: null,
             loading: false
         }
 
-        
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
     handleSelect(selectedKey) {
-
+        
+        console.log(this.state.stockCharts[selectedKey]);
         //a new stock has been selected
-        this.setState({selectedStock: this.state.stocks[selectedKey]});
+        this.setState({
+            selectedStock: this.state.stocks[selectedKey],
+            stockIndex: selectedKey
+        });
 
-        console.log(this.state.selectedStock);
+        
+        
     }
 
     componentWillMount() {
@@ -58,8 +64,6 @@ class Stocks extends Component {
             if(result) {
                 //the stocks is now our array of data
                 this.setState({stocks: result, selectedStock: result[0]});
-                
-                
 
                 //now we have our result. 
                 //what we want to do now is call the Alpha Advantage API to get the price info foreach of these stocks
@@ -75,7 +79,7 @@ class Stocks extends Component {
 
                         //add the stock info for that stock to our state
                         //add it this way, because it is an array of objects
-                        this.setState({stockCharts: [...this.state.stockCharts, result]})
+                        this.setState({stockCharts: [result,...this.state.stockCharts]})
                         
                     })
                     .catch((error) => {
@@ -99,16 +103,16 @@ class Stocks extends Component {
 
     render() {
         //bring in our state
-        var {stocks, stockCharts, selectedStock, loading} = this.state;
+        var {stocks, stockCharts, selectedStock, loading, stockIndex} = this.state;
 
         //for iterating the eventkey
         var index = -1;
 
-        var newstocks = JSON.stringify(stockCharts[0]);
-
         if(loading) {
             return <h1>Loading...</h1>
         }
+
+        
 
         //basically, is the array filled up yet?
         if(stockCharts.length == stocks.length) {
@@ -117,6 +121,7 @@ class Stocks extends Component {
                     
                     <Nav className="sideBar" bsStyle="pills" stacked pullLeft onSelect={this.handleSelect}>
                         {stocks.map(stock => {
+                            //this is why index is -1
                             index++;
                             return(
                                 <NavItem key={stock.stockId} eventKey={index}>
@@ -126,11 +131,12 @@ class Stocks extends Component {
                             
                         })}
                     </Nav>
-                    {console.log(this.state.stockCharts[0]["Meta Data"])}
+                    
                     <Stock 
                     name={this.state.selectedStock.name}
                     symbol={this.state.selectedStock.symbol}
-                    priceData={this.state.stockCharts[1]}
+                    quantity={this.state.selectedStock.quantityOwned}
+                    priceData={this.state.stockCharts[stockIndex]}
                     />
                 </div>
             );
