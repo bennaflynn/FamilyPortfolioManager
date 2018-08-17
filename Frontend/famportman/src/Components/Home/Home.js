@@ -80,8 +80,8 @@ class Home extends Component {
                 handleNavigation={this.handleNavigation}
                 />     
                    
-                <h1>{this.state.username}</h1> 
-                <p>{this.state.firstname} {this.state.lastname}</p>
+                {/* <h1>{this.state.username}</h1> 
+                <p>{this.state.firstname} {this.state.lastname}</p> */}
                 <Switch>
                     <Route path={`${this.props.match.path}/stocks`} component={Stocks}  />
                     <Route path={`${this.props.match.path}/assets`} component={Assets}  />

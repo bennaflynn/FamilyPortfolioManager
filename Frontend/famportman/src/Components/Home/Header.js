@@ -17,7 +17,9 @@ class Header extends Component {
     }
 
     //the user has clicked the item
-    handleClick(item) {
+    handleClick(e,item) {
+        console.log(e);
+        
         //send the item back up to the parent
         this.props.handleNavigation(item);
     }
@@ -43,7 +45,7 @@ class Header extends Component {
                             id={item[0]}
                             key={item[1]}
                             eventKey={item[1]}
-                            onClick={() => this.handleClick(item)}
+                            onClick={e => this.handleClick(e,item)}
                             >
                                 {item[0]}
                             </NavItem>
