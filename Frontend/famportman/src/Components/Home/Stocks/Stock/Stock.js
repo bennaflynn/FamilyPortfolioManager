@@ -114,6 +114,7 @@ class Stock extends Component {
         }
 
         var options = {
+            maintainAspectRatio: true,
             scales: {
                 yAxes: [{
                     ticks: {
@@ -167,7 +168,7 @@ class Stock extends Component {
                 </Table>
 
                 
-                {<Line data={data} options={options} />}
+                <Line width={400} height={100} data={data} options={options} />
                
                 
                 
