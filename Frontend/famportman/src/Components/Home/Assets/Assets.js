@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 
+//styles
+import './Assets.css';
+
 //bootstrap
 import {Nav, NavItem, Grid, Row, Col} from 'react-bootstrap';
 
@@ -54,12 +57,12 @@ class Assets extends Component {
             return(
                 <Grid>
                     <Row>
-                        <Col xs={2}>
-                            <Nav className="" bsStyle="tabs" stacked pullLeft>
+                        <Col md={2}>
+                            <Nav bsStyle="tabs" stacked pullLeft>
                                 {assets.map(ass => {
                                     index++;
                                     return(
-                                        <NavItem
+                                        <NavItem 
                                         key={ass.assetId}
                                         eventKey={index}>
                                         {ass.name}
@@ -69,7 +72,7 @@ class Assets extends Component {
                                 })}
                             </Nav>
                         </Col>
-                        <Col xs={10}>
+                        <Col md={10}>
                                 <Asset asset={assets[selectedAsset]} />
                         </Col>
                     </Row>
