@@ -140,8 +140,8 @@ class Stock extends Component {
                     <tbody>
                         <tr>
                             <td>{quantity}</td>
-                            <td>{priceData["Weekly Time Series"][lastUpdated]["4. close"]}</td>
-                            <td>{quantity * priceData["Weekly Time Series"][lastUpdated]["4. close"]}</td>
+                            <td>${priceData["Weekly Time Series"][lastUpdated]["4. close"]}</td>
+                            <td>${Math.round(quantity * priceData["Weekly Time Series"][lastUpdated]["4. close"])}</td>
                         </tr>
                     </tbody>
                 </Table>

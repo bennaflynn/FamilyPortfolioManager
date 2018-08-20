@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 //bootstrap
-import {Nav, NavItem} from 'react-bootstrap';
+import {Nav, NavItem, Grid, Row, Col} from 'react-bootstrap';
 
 //styles
 import './Stocks.css';
@@ -117,28 +117,32 @@ class Stocks extends Component {
         //basically, is the array filled up yet?
         if(stockCharts.length == stocks.length) {
             return(                
-                <div>
-                    
-                    <Nav className="sideBar" bsStyle="pills" stacked pullLeft onSelect={this.handleSelect}>
-                        {stocks.map(stock => {
-                            //this is why index is -1
-                            index++;
-                            return(
-                                <NavItem key={stock.stockId} eventKey={index}>
-                                    {stock.name}
-                                </NavItem>
-                            );
-                            
-                        })}
-                    </Nav>
-                    
-                    <Stock 
-                    name={this.state.selectedStock.name}
-                    symbol={this.state.selectedStock.symbol}
-                    quantity={this.state.selectedStock.quantityOwned}
-                    priceData={this.state.stockCharts[stockIndex]}
-                    />
-                </div>
+                <Grid>
+                    <Row>
+                        <Col xs={2}>
+                            <Nav className="sideBar" bsStyle="pills" stacked pullLeft onSelect={this.handleSelect}>
+                                {stocks.map(stock => {
+                                    //this is why index is -1
+                                    index++;
+                                    return(
+                                        <NavItem key={stock.stockId} eventKey={index}>
+                                            {stock.name}
+                                        </NavItem>
+                                    );
+                                    
+                                })}
+                            </Nav>
+                    </Col>
+                    <Col xs={10}>
+                        <Stock 
+                        name={this.state.selectedStock.name}
+                        symbol={this.state.selectedStock.symbol}
+                        quantity={this.state.selectedStock.quantityOwned}
+                        priceData={this.state.stockCharts[stockIndex]}
+                        />
+                    </Col>
+                    </Row>
+                </Grid>
             );
         }
 
