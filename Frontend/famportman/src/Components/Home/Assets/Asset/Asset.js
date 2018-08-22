@@ -9,7 +9,7 @@ class Asset extends Component {
 
         this.state = props;
 
-        console.log(this.state);
+        
     }
 
     componentWillReceiveProps(props) {
@@ -17,7 +17,7 @@ class Asset extends Component {
     }
 
     render() {
-        console.log(this.state);
+        
         var currentValue = this.state.asset["currentValue"] * this.state.asset["quanityOwned"];
         var overhead = this.state.asset["overhead"] * this.state.asset["quanityOwned"];
         var purchasePrice = this.state.asset["purchasePrice"] * this.state.asset["quanityOwned"];
@@ -29,7 +29,7 @@ class Asset extends Component {
         return(
             <div>
                 <h1>{this.state.asset["name"]}</h1>
-                <img src={imageUrl} />
+                
                 <Table>
                     <thead>
                         <tr>
@@ -41,10 +41,10 @@ class Asset extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{currentValue}</td>
-                            <td>{purchasePrice}</td>
-                            <td>{overhead}</td>
-                            <td>{valueInPortfolio}</td>
+                            <td>${currentValue}</td>
+                            <td>${purchasePrice}</td>
+                            <td>${overhead}</td>
+                            <td>${valueInPortfolio}</td>
                         </tr>
                     </tbody>
                 </Table>

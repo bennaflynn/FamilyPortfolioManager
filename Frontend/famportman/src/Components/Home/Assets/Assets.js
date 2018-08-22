@@ -21,26 +21,13 @@ class Assets extends Component {
         super(props);
 
         this.state = {
-            assets: [],
+            assets: this.props.assets,
             loading: false,
             error: null,
             selectedAsset: 0
         }
 
     }   
-
-    //get the assets from our server
-    componentWillMount() {
-        httpGet(`${API_URL}assets/getassets`,this.props.cookies.get('token'))
-        .then(handleResponse)
-        .then((result) => {
-            this.setState({assets: result})
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-    }
-
 
 
     render() {

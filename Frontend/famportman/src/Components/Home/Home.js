@@ -24,6 +24,7 @@ class Home extends Component {
             lastname: "",
             stocks: [],
             stockCharts: [],
+            assets: [],
             loading: true
         }
 
@@ -71,7 +72,7 @@ class Home extends Component {
 
     //get the stock and asset data from our backend
     componentDidMount() {
-        console.log("Did mount");
+       
         //we are loading
         this.setState({loading: true});
         //get stocks
@@ -93,7 +94,7 @@ class Home extends Component {
                     //add the stock info for that stock to our state
                     //add it this way, because it is an array of objects
                     this.setState({stockCharts: [result,...this.state.stockCharts]});
-                    console.log(result);
+                   
                      
                 })
                 .catch((error) => {
@@ -106,44 +107,69 @@ class Home extends Component {
             console.log(error);
             this.setState({loading: false});
         })
+
+        
+        //get the assets
+        httpGet(`${API_URL}assets/getassets`, this.props.cookies.get('token'))
+        .then(handleResponse)
+        .then((result) => {
+            this.setState({assets: result, loading: false});
+        })
+        .catch((error) => {
+            this.setState({loading: false});
+            console.log(error);
+        })
     }
 
     //the user clicks an item in the header
     handleNavigation(item) {
         //get whatever item is selected
-        console.log("From parent");
-        console.log(item);
         this.props.history.push(`/home/${item[0]}`)
     }
 
     render() {
-        const {loading, stocks, stockCharts} = this.state;
+        const {loading, stocks, stockCharts, assets} = this.state;
 
         //is loading done?
         if(!loading) {
+
             
             //are the sizes of the arrays the same?
-            if(stocks.length == stockCharts.length) {
-                return(   
-                    <div>
-                        <Header 
-                        first={this.state.firstname}
-                        last={this.state.lastname}
-                        handleNavigation={this.handleNavigation}
-                        />     
-                       
-                            <Switch>
-                            <Route path={`${this.props.match.path}/stocks`} 
-                            render={(props) => <Stocks {...props} stocks={stocks} stockCharts={stockCharts} />}  />
-                            <Route path={`${this.props.match.path}/assets`} component={Assets}  />
-                        </Switch>
-                        
-                        
-                    </div>      
-                );
-            } else {
-                return <h1>A lot is happening, wait a little more...</h1>
-            }
+            if(stocks.length == stockCharts.length && assets.length > 0 && stockCharts.length > 0) {
+                
+                if(stockCharts[0]["Information"] != null) {
+                    console.log(stockCharts, "too many calls");
+                    return(
+                        <div>
+                            <h1>The Alpha Advantage API took a bite into the sand</h1>
+                            <h3>Just wait 5 seconds and then refresh the page</h3>
+                            <h4>If problem persists contact Ben</h4>
+                        </div>
+                    );
+                } else {
+                    return(   
+                        <div>
+                            <Header 
+                            first={this.state.firstname}
+                            last={this.state.lastname}
+                            handleNavigation={this.handleNavigation}
+                            />     
+                           
+                                <Switch>
+                                <Route path={`${this.props.match.path}/stocks`} 
+                                render={(props) => <Stocks {...props} stocks={stocks} stockCharts={stockCharts} />}  />
+                                <Route path={`${this.props.match.path}/assets`} render={(props) => <Assets {...props} assets={assets} />}  />
+                            </Switch>
+                            
+                            
+                        </div>      
+                    );
+                }
+                } else {
+                    return <h1>A lot is happening, wait a little more...</h1>
+                }
+                
+                
             
         } else {
             return <h1>Loading...</h1>
