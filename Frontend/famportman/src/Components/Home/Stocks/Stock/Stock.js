@@ -54,7 +54,6 @@ class Stock extends Component {
     get52Weeks(priceData) {
         var {fiftyTwoWeeks} = this.state;
 
-        console.log(priceData);
         //our counter
         var max = 52;
 
@@ -80,7 +79,6 @@ class Stock extends Component {
         
         var {name, symbol, priceData, lastUpdated, quantity, fiftyTwoWeeks, dates} = this.state;
 
-        console.log(dates);
 
         if(!priceData) {
             return(
@@ -124,7 +122,6 @@ class Stock extends Component {
             }
         }
         
-        console.log(data, options);
         return(
             <div>
                 <h1>{name}</h1>

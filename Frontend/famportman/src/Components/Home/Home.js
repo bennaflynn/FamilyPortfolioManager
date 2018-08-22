@@ -5,8 +5,9 @@ import {withCookies,Cookies} from 'react-cookie';
 import {withRouter} from 'react-router-dom';
 import {checkCookie} from '../../Helpers/checkCookie';
 import {handleResponse} from '../../Helpers/handleResponse';
-import {API_URL} from '../../Constants/api';
+import {API_URL, ALPHA_KEY,ALPHA_URL_WEEKLY} from '../../Constants/api';
 import {Route, Switch} from 'react-router-dom';
+import {httpGet} from '../../Helpers/httpMethods';
 
 //Components
 import Header from './Header';
@@ -20,7 +21,10 @@ class Home extends Component {
         this.state = {
             username: "",
             firstname: "",
-            lastname: ""
+            lastname: "",
+            stocks: [],
+            stockCharts: [],
+            loading: true
         }
 
         //bind our event handlers
@@ -62,8 +66,49 @@ class Home extends Component {
             console.log(error);
             this.props.history.push('/login');
         })
+        
     }
 
+    //get the stock and asset data from our backend
+    componentDidMount() {
+        console.log("Did mount");
+        //we are loading
+        this.setState({loading: true});
+        //get stocks
+        httpGet(`${API_URL}assets/getallstocks`, this.props.cookies.get('token'))
+        .then(handleResponse)
+        .then((result) => {
+            //we got our stocks from the backend
+            this.setState({stocks: result});
+            //now lets call the alpha advantage api
+            //to get the price info
+            result.forEach(function(element) {
+                
+                fetch(`${ALPHA_URL_WEEKLY+element.symbol+ALPHA_KEY}`, {
+                    method: 'GET'
+                })
+                .then(handleResponse)
+                .then((result) => {
+                    
+                    //add the stock info for that stock to our state
+                    //add it this way, because it is an array of objects
+                    this.setState({stockCharts: [result,...this.state.stockCharts]});
+                    console.log(result);
+                     
+                })
+                .catch((error) => {
+                    console.log("Blah blah blah");
+                })
+            }, this);
+            this.setState({loading: false});
+        })
+        .catch((error) => {
+            console.log(error);
+            this.setState({loading: false});
+        })
+    }
+
+    //the user clicks an item in the header
     handleNavigation(item) {
         //get whatever item is selected
         console.log("From parent");
@@ -72,22 +117,38 @@ class Home extends Component {
     }
 
     render() {
-        return(   
-            <div>
-                <Header 
-                first={this.state.firstname}
-                last={this.state.lastname}
-                handleNavigation={this.handleNavigation}
-                />     
-                   
-                {/* <h1>{this.state.username}</h1> 
-                <p>{this.state.firstname} {this.state.lastname}</p> */}
-                <Switch>
-                    <Route path={`${this.props.match.path}/stocks`} component={Stocks}  />
-                    <Route path={`${this.props.match.path}/assets`} component={Assets}  />
-                </Switch>
-            </div>      
-        );
+        const {loading, stocks, stockCharts} = this.state;
+
+        //is loading done?
+        if(!loading) {
+            
+            //are the sizes of the arrays the same?
+            if(stocks.length == stockCharts.length) {
+                return(   
+                    <div>
+                        <Header 
+                        first={this.state.firstname}
+                        last={this.state.lastname}
+                        handleNavigation={this.handleNavigation}
+                        />     
+                       
+                            <Switch>
+                            <Route path={`${this.props.match.path}/stocks`} 
+                            render={(props) => <Stocks {...props} stocks={stocks} stockCharts={stockCharts} />}  />
+                            <Route path={`${this.props.match.path}/assets`} component={Assets}  />
+                        </Switch>
+                        
+                        
+                    </div>      
+                );
+            } else {
+                return <h1>A lot is happening, wait a little more...</h1>
+            }
+            
+        } else {
+            return <h1>Loading...</h1>
+        }
+       
     }
 }
 
