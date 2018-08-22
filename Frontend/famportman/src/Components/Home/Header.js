@@ -10,7 +10,7 @@ class Header extends Component {
 
 
         this.state = {
-            navItems: [['Stocks',1],['Assets',2],['Profile',3]]
+            navItems: [['Stocks',1],['Assets',2],['Portfolio',3]]
         }
 
         this.handleClick = this.handleClick.bind(this);

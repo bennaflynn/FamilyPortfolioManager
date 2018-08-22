@@ -13,6 +13,7 @@ import {httpGet} from '../../Helpers/httpMethods';
 import Header from './Header';
 import Stocks from './Stocks/Stocks';
 import Assets from './Assets/Assets';
+import Portfolio from './Portfolio/Portfolio';
 
 class Home extends Component {
     constructor(props) {
@@ -138,7 +139,7 @@ class Home extends Component {
             if(stocks.length == stockCharts.length && assets.length > 0 && stockCharts.length > 0) {
                 
                 if(stockCharts[0]["Information"] != null) {
-                    console.log(stockCharts, "too many calls");
+                    //this will be fired if we exceed the call limit from alpha advantage
                     return(
                         <div>
                             <h1>The Alpha Advantage API took a bite into the sand</h1>
@@ -159,6 +160,8 @@ class Home extends Component {
                                 <Route path={`${this.props.match.path}/stocks`} 
                                 render={(props) => <Stocks {...props} stocks={stocks} stockCharts={stockCharts} />}  />
                                 <Route path={`${this.props.match.path}/assets`} render={(props) => <Assets {...props} assets={assets} />}  />
+                                <Route path={`${this.props.match.path}/portfolio`}
+                                render={(props) => <Portfolio {...props} stockCharts={stockCharts} stocks={stocks} assets={assets} />} />
                             </Switch>
                             
                             
