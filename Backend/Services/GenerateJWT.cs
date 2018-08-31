@@ -12,11 +12,13 @@ namespace FamilyPortfolioManager.Services
 {
     public static class GenerateJWT
     {
-        public static string Generate(string userid,IConfiguration config)
+        public static string Generate(string userid, string portId, IConfiguration config)
         {
+            //testing with multiple claims
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userid),
+                new Claim(JwtRegisteredClaimNames.Azp, portId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier,userid)
             };

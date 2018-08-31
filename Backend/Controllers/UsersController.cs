@@ -31,6 +31,8 @@ namespace FamilyPortfolioManager.Controllers
         [HttpPost]
         public IActionResult NewUser([FromBody] NewUserVM newUser)
         {
+            //TO DO: Log the user in
+
             //are the fields all filled in?
             if(!ModelState.IsValid)
             {
@@ -120,6 +122,8 @@ namespace FamilyPortfolioManager.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]LoginVM user)
         {
+            //TO DO: MAKE THE MUTLPIPLE ACCOUNTS SHOW UP WHEN THE USER THEM
+
             if(!ModelState.IsValid)
             {
                 return Json(new JSONResponseVM { success = false, message = "Model state is incorrect" });
@@ -130,7 +134,12 @@ namespace FamilyPortfolioManager.Controllers
             User theUser = context.Users.Where(u => u.username == user.username && u.password == password).FirstOrDefault();
             if(theUser != null)
             {
-                return Json(new JSONResponseVM { success = true, message = GenerateJWT.Generate(theUser.userId.ToString(), config) });
+                return Json(new JSONResponseVM { success = true, message = GenerateJWT.Generate(
+                    theUser.userId.ToString(), 
+                    theUser.portfolioId1.ToString(), 
+                    config)
+                });
+
             } else
             {
                 return Json(new JSONResponseVM { success = false, message = "Incorrect login details" });
@@ -189,6 +198,7 @@ namespace FamilyPortfolioManager.Controllers
         {
             //get the userId
             var userId = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Sub).Value;
+            var port = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Azp).Value;
 
             //does this user exist?
             if(userId != null)
