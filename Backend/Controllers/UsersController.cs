@@ -198,7 +198,7 @@ namespace FamilyPortfolioManager.Controllers
         {
             //get the userId
             var userId = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Sub).Value;
-            var port = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Azp).Value;
+ 
 
             //does this user exist?
             if(userId != null)

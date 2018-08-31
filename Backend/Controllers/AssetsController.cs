@@ -17,10 +17,12 @@ namespace FamilyPortfolioManager.Controllers
     public class AssetsController : Controller
     {
         AppDbContext context;
+        IHttpContextAccessor httpContext;
 
-        public AssetsController(AppDbContext context)
+        public AssetsController(AppDbContext context, IHttpContextAccessor httpContext)
         {
             this.context = context;
+            this.httpContext = httpContext;
         }
 
         [HttpPost]
@@ -28,6 +30,16 @@ namespace FamilyPortfolioManager.Controllers
         public IActionResult AddNewStock([FromBody] StockVM stock)
         {
             if (!ModelState.IsValid)
+            {
+                return Json(new JSONResponseVM { success = false, message = "Model state isn't valid" });
+            }
+            //get the portfolioId
+            var port = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Azp).Value;
+
+            Guid portId;
+
+            //is this portId legit?
+            if(!Guid.TryParse(port,out portId))
             {
                 return Json(new JSONResponseVM { success = false, message = "Model state isn't valid" });
             }
@@ -49,7 +61,9 @@ namespace FamilyPortfolioManager.Controllers
                     stockId = Guid.NewGuid(),
                     name = stock.name,
                     symbol = stock.symbol,
-                    quantityOwned = stock.quantityOwned
+                    quantityOwned = stock.quantityOwned,
+                    portfolioId = portId,
+                    Portfolio = context.Portfolios.Where(p => p.portfolioId == portId).FirstOrDefault()
                 };
                 context.Stocks.Add(newStock);
                 context.SaveChanges();
@@ -68,6 +82,17 @@ namespace FamilyPortfolioManager.Controllers
                 return Json(new JSONResponseVM { success = false, message = "Model state is invalid" });
             }
 
+            //get the portfolioId
+            var port = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Azp).Value;
+
+            Guid portId;
+
+            //is this portId legit?
+            if (!Guid.TryParse(port, out portId))
+            {
+                return Json(new JSONResponseVM { success = false, message = "Model state isn't valid" });
+            }
+
             //to do, add image upload to imgur
 
 
@@ -80,7 +105,9 @@ namespace FamilyPortfolioManager.Controllers
                 purchasePrice = newAsset.purchasePrice,
                 currentValue = newAsset.currentValue,
                 overhead = newAsset.overhead,
-                quanityOwned = newAsset.quanityOwned
+                quanityOwned = newAsset.quanityOwned,
+                portfolioId = portId,
+                Portfolio = context.Portfolios.Where(p => p.portfolioId == portId).FirstOrDefault()
             };
 
             context.Assets.Add(ass);
@@ -109,7 +136,21 @@ namespace FamilyPortfolioManager.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult GetAssets() => Json(context.Assets.Where(a => a.quanityOwned > 0));
+        public IActionResult GetAssets()
+        {
+            //get the portfolioId
+            var port = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Azp).Value;
+
+            Guid portId;
+
+            //is this portId legit?
+            if (!Guid.TryParse(port, out portId))
+            {
+                return Json(new JSONResponseVM { success = false, message = "Model state isn't valid" });
+            }
+
+            return Json(context.Assets.Where(a => a.quanityOwned > 0).Where(p => p.portfolioId == portId));
+        }
 
         //this action result also doubles as a delete, as when deleting the quantity owned just gets 
         //set to zero. And when displaying the stocks we only display the ones whose quantity owned
@@ -138,7 +179,20 @@ namespace FamilyPortfolioManager.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult GetAllStocks() => Json(context.Stocks.Where(s => s.quantityOwned > 0));
+        public IActionResult GetAllStocks()
+        {
+            //get the portfolioId
+            var port = httpContext?.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Azp).Value;
+
+            Guid portId;
+
+            //is this portId legit?
+            if (!Guid.TryParse(port, out portId))
+            {
+                return Json(new JSONResponseVM { success = false, message = "Model state isn't valid" });
+            }
+            return Json(context.Stocks.Where(s => s.quantityOwned > 0).Where(p => p.portfolioId == portId));
+        }
         
     }
 }
