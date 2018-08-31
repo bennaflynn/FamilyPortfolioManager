@@ -16,6 +16,7 @@ namespace FamilyPortfolioManager.Models.ViewModels
         public string lastname { get; set; }
         [Required]
         public string password { get; set; }
+        public string portfolioId { get; set; }
 
     }
 }

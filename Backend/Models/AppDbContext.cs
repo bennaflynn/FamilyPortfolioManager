@@ -115,6 +115,6 @@ namespace FamilyPortfolioManager.Models
         public IEnumerable<Stock> Stocks { get; set; }
 
         //one to one relationship between Portfolio and User
-        public virtual User User { get; set; }
+        //public virtual User User { get; set; }
     }
 }

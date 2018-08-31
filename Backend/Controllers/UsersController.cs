@@ -37,20 +37,84 @@ namespace FamilyPortfolioManager.Controllers
                 return Json(new JSONResponseVM { success = false, message = "Model state is incorrect" });
             }
 
-            //create a new user
-            User user = new User
+        
+
+            //the user has provided a portfolio that they have been invited to
+            if(newUser.portfolioId != null)
             {
-                userId = Guid.NewGuid(),
-                firstname = newUser.firstname,
-                lastname = newUser.lastname,
-                username = newUser.username,
-                password = HashString.HashThat(newUser.password, config["salt"])
-            };
+                //the user has provided a porfolio that they are being added to
 
-            context.Users.Add(user);
-            context.SaveChanges();
+                Guid portId;
 
-            return Json(new JSONResponseVM { success = true, message = "Added user " + user.firstname + " " + user.lastname });
+                //first lets check if the Guid is valid or not
+                if(Guid.TryParse(newUser.portfolioId,out portId))
+                {
+                    //okay this is a valid Guid, but does it correspond to a porfolio in the database?
+                    Portfolio port = context.Portfolios.Where(p => p.portfolioId == portId).FirstOrDefault();
+
+                    if (port != null)
+                    {
+                        //this is a valid portfolio id, lets create a user
+                        User user = new User
+                        {
+                            userId = Guid.NewGuid(),
+                            firstname = newUser.firstname,
+                            lastname = newUser.lastname,
+                            username = newUser.username,
+                            password = HashString.HashThat(newUser.password, config["salt"]),
+                            portfolioId1 = port.portfolioId
+                        };
+                        context.Users.Add(user);
+                        //save the database
+                        context.SaveChanges();
+
+                        return Json(new JSONResponseVM { success = true, message = "Added user " + user.firstname + " " + user.lastname });
+
+                    } else
+                    {
+                        //this is not a valid id
+                        return Json(new JSONResponseVM { success = false, message = "This Portfolio doesn't exist" });
+                    }
+
+                } else
+                {
+                    //this isn't a valid Guid
+                    return Json(new JSONResponseVM { success = false, message = "This Portfolio doesn't exist" });
+                }
+
+            } else
+            {
+                //the user doesn't have a portfolio, so let's make them a default one
+                Portfolio portfolio = new Portfolio
+                {
+                    portfolioId = Guid.NewGuid(),
+                    name = newUser.firstname + "'s Portfolio",
+                    date = DateTime.Now,
+                    value = 0
+                };
+
+                //create a new user
+                User user = new User
+                {
+                    userId = Guid.NewGuid(),
+                    firstname = newUser.firstname,
+                    lastname = newUser.lastname,
+                    username = newUser.username,
+                    password = HashString.HashThat(newUser.password, config["salt"]),
+                    portfolioId1 = portfolio.portfolioId
+                };
+                
+
+                //add to the db
+                context.Portfolios.Add(portfolio);
+                context.Users.Add(user);
+
+                //save the database
+                context.SaveChanges();
+
+                return Json(new JSONResponseVM { success = true, message = "Added user " + user.firstname + " " + user.lastname });
+            }
+            
         }
 
         [HttpPost]
